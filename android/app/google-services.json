@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1075963570680",
+    "firebase_url": "https://dalal-laundry.firebaseio.com",
+    "project_id": "dewdrop-laundry",
+    "storage_bucket": "dewdrop-laundry.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1075963570680:android:de7c16d981b36539a78e0d",
+        "android_client_info": {
+          "package_name": "com.dewdrop.customer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1075963570680-uu0ealouehsoh5ev4k94ohve6v1dhv5i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBV3QVZVisZUV45o5v1dhEXJx-BRPJgTY8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1075963570680-uu0ealouehsoh5ev4k94ohve6v1dhv5i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
