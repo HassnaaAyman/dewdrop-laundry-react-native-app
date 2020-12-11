@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, I18nManager } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
-import { api_url, logo, settings } from '../config/Constants';
+import { api_url, base_url, logo, settings } from '../config/Constants';
 import * as colors from '../assets/css/Colors';
 import { Image, StatusBar, Loader } from '../components/GeneralComponents';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -11,7 +11,7 @@ import { serviceActionPending, serviceActionError, serviceActionSuccess } from '
 import { notifications } from "react-native-firebase-push-notifications"
 import strings from "../languages/strings.js";
 import RNRestart from 'react-native-restart';
-class Splash extends Component<Props>{
+class Splash extends Component {
 
   async componentDidMount() {
     await this.getToken();
@@ -31,7 +31,7 @@ class Splash extends Component<Props>{
 
         }
       }
-    }else{
+    } else {
       global.fcm_token = fcmToken;
     }
   }
@@ -77,25 +77,25 @@ class Splash extends Component<Props>{
     //only works on iOS for now
     return await notifications.setBadge(number)
   }
- 
+
   getBadge = async () => {
     //only works on iOS for now
     return await notifications.getBadge()
   }
- 
+
   hasPermission = async () => {
     //only works on iOS
     return await notifications.hasPermission()
     //or     return await messages.hasPermission()
   }
- 
+
   requestPermission = async () => {
     //only works on iOS
     return await notifications.requestPermission()
     //or     return await messages.requestPermission()
   }
- 
-    componentWillUnmount() {
+
+  componentWillUnmount() {
     //remove the listener on unmount
     if (this.removeOnNotificationOpened) {
       this.removeOnNotificationOpened()
@@ -103,61 +103,61 @@ class Splash extends Component<Props>{
     if (this.removeOnNotification) {
       this.removeOnNotification()
     }
- 
+
     if (this.removeonTokenRefresh) {
       this.removeonTokenRefresh()
     }
   }
-  
+
   settings = async () => {
     this.props.serviceActionPending();
     await axios({
-      method: 'get', 
-      url: api_url + settings
+      method: 'get',
+      url: base_url + settings
     })
-    .then(async response => {
+      .then(async response => {
         await this.props.serviceActionSuccess(response.data)
-    })
-    .catch(error => {
-      //console.log(error);
-      this.props.serviceActionError(error);
-    });
+      })
+      .catch(error => {
+        //console.log(error);
+        this.props.serviceActionError(error);
+      });
   }
 
   home = async () => {
-   const user_id = await AsyncStorage.getItem('user_id');
-   const customer_name = await AsyncStorage.getItem('customer_name');
-   const lang = await AsyncStorage.getItem('lang');
-   global.currency = this.props.data.default_currency;
-   global.min_order = this.props.data.min_order;
-   global.delivery_cost = this.props.data.delivery_cost;
-   global.stripe_key = this.props.data.stripe_key;
-   
-   if(lang != null){
-    await strings.setLanguage(lang);
-    global.lang = await lang
-   }else{
-    global.lang = 'ar';
-    AsyncStorage.setItem('lang', 'ar');
-    I18nManager.forceRTL(true);
-    RNRestart.Restart();
-   }
+    const user_id = await AsyncStorage.getItem('user_id');
+    const customer_name = await AsyncStorage.getItem('customer_name');
+    const lang = await AsyncStorage.getItem('lang');
+    global.currency = this.props.data.default_currency;
+    global.min_order = this.props.data.min_order;
+    global.delivery_cost = this.props.data.delivery_cost;
+    global.stripe_key = this.props.data.stripe_key;
 
-   if(user_id !== null){
+    if (lang != null) {
+      await strings.setLanguage(lang);
+      global.lang = await lang
+    } else {
+      global.lang = 'ar';
+      AsyncStorage.setItem('lang', 'ar');
+      I18nManager.forceRTL(true);
+      RNRestart.Restart();
+    }
+
+    if (user_id !== null) {
       global.id = user_id;
       global.customer_name = customer_name;
       this.props.navigation.dispatch(
         CommonActions.reset({
-            index: 0,
-            routes: [{name: "Home"}],
+          index: 0,
+          routes: [{ name: "Home" }],
         })
       );
-   }else{
+    } else {
       global.id = '';
       this.props.navigation.dispatch(
         CommonActions.reset({
-            index: 0,
-            routes: [{name: "Phone"}],
+          index: 0,
+          routes: [{ name: "Phone" }],
         })
       );
     }
@@ -177,24 +177,24 @@ class Splash extends Component<Props>{
   }
 }
 
-function mapStateToProps(state){
-  return{
-    isLoding : state.splash.isLoding,
-    error : state.splash.error,
-    data : state.splash.data,
-    message : state.splash.message,
-    status : state.splash.status,
+function mapStateToProps(state) {
+  return {
+    isLoding: state.splash.isLoding,
+    error: state.splash.error,
+    data: state.splash.data,
+    message: state.splash.message,
+    status: state.splash.status,
   };
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    serviceActionPending: () => dispatch(serviceActionPending()),
-    serviceActionError: (error) => dispatch(serviceActionError(error)),
-    serviceActionSuccess: (data) => dispatch(serviceActionSuccess(data))
+  serviceActionPending: () => dispatch(serviceActionPending()),
+  serviceActionError: (error) => dispatch(serviceActionError(error)),
+  serviceActionSuccess: (data) => dispatch(serviceActionSuccess(data))
 });
 
 
-export default connect(mapStateToProps,mapDispatchToProps)(Splash);
+export default connect(mapStateToProps, mapDispatchToProps)(Splash);
 
 
 const styles = StyleSheet.create({
@@ -202,10 +202,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor:"#F7F5F5"
+    backgroundColor: "#F7F5F5"
   },
-  image_view:{
-    height:180, 
-    width:350
+  image_view: {
+    height: 180,
+    width: 350
   }
 });

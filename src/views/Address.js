@@ -84,10 +84,12 @@ class Address extends Component {
         },
       })
         .then(async response => {
-          await this.props.serviceActionSuccess(response.data);
-          await this.redirect(response.data, this.state);
+          console.log(response, "response>>>>>>>");
+          // await this.props.serviceActionSuccess(response.data);
+          // await this.redirect(response.data, this.state);
         })
         .catch(error => {
+          console.log(error, "error");
           this.showSnackbar(strings.sorry_something_went_wrong);
           this.props.serviceActionError(error);
         });
@@ -127,15 +129,16 @@ class Address extends Component {
     });
   }
 
-  handleBackButtonClick = data => {
-    const { navigation, route } = this.props;
-    navigation.goBack();
-    route.params.getAdressAndLocation({
-      address: this.state.address,
-      location: this.state.longitude + ',' + this.state.latitude,
-    });
-    // this.props.navigation.goBack('', data);
-  };
+  // handleBackButtonClick = data => {
+  //   const { navigation, route } = this.props;
+  //   console.log(route, "route");
+  //   navigation.goBack();
+  //   route.params.getAdressAndLocation({
+  //     address: this.state.address,
+  //     location: this.state.longitude + ',' + this.state.latitude,
+  //   });
+  //   this.props.navigation.goBack('', data);
+  // };
 
   async componentDidMount() {
     if (Platform.OS === 'ios') {
@@ -151,7 +154,7 @@ class Address extends Component {
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         {
           title: 'Location Access Required',
-          message: 'Dalal Laundry needs to Access your location for tracking',
+          message: 'Dewdrop Laundry needs to Access your location for tracking',
         },
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
@@ -177,7 +180,7 @@ class Address extends Component {
     this.props.editServiceActionPending();
     await axios({
       method: 'get',
-      url: api_url + address + '/' + this.state.address_id + '/edit',
+      url: base_url + address + '/' + this.state.address_id + '/edit',
     })
       .then(async response => {
         await this.props.editServiceActionSuccess(response.data);
@@ -211,7 +214,7 @@ class Address extends Component {
       this.props.updateServiceActionPending();
       await axios({
         method: 'patch',
-        url: api_url + address + '/' + this.state.address_id,
+        url: base_url + address + '/' + this.state.address_id,
         data: {
           customer_id: global.id,
           address: this.state.address.toString(),
@@ -281,6 +284,9 @@ class Address extends Component {
 
   render() {
     const { isLoding } = this.props;
+    // console.log(this.state.address_id, "map");
+    console.log(global.id, this.state.address.toString(), this.state.door_no, this.state.latitude, this.state.longitude);
+
     return (
       <Container
         keyboardShouldPersistTaps="always"
@@ -300,7 +306,7 @@ class Address extends Component {
           <Right />
         </Header>
 
-        {this.state.open_map == 1 && (
+        {this.state.open_map === 1 && (
           <Content keyboardShouldPersistTaps="always">
             <View style={styles.content}>
               <MapView
@@ -352,13 +358,13 @@ class Address extends Component {
             </View>
           </Content>
         )}
-        {this.state.open_map == 1 && (
+        {this.state.open_map === 1 && (
           <Footer style={styles.footer}>
             <View style={styles.footer_content}>
               <Button
                 title={strings.done}
                 onPress={
-                  this.state.address_id != 0
+                  this.state.address_id !== 0
                     ? this.update_address
                     : this.add_address
                 }

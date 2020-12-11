@@ -46,6 +46,7 @@ import {
 } from '../actions/ProductActions';
 import { subTotal } from '../actions/CartActions';
 import Arrow from 'react-native-vector-icons/Foundation';
+import SvgUri from 'react-native-svg-uri';
 
 import strings from '../languages/strings.js';
 
@@ -139,6 +140,8 @@ class Product extends Component {
       cart_count,
       navigation,
     } = this.props;
+    data?.map((item) => console.log(item, "item"));
+    console.log(data, "data");
     return (
       <Container>
         <Header androidStatusBarColor={colors.theme_bg} style={styles.header}>
@@ -173,28 +176,34 @@ class Product extends Component {
                 }}
                 textStyle={{ fontSize: 10, fontWeight: "bold", color: colors.theme_bg_three }}
               >
-                <ScrollView>
-                  <List>
-                    <FlatList
-                      data={I18nManager.isRTL
-                        ? Platform.OS === 'android'
-                          ? data[data.length - 1 - index].product
-                          : row.product
+                <List>
+                  <FlatList
+                    data={I18nManager.isRTL
+                      ? Platform.OS === 'android'
+                        ? data[data.length - 1 - index].product
                         : row.product
-                      }
-                      renderItem={({ item, index }) => (
+                      : row.product
+                    }
+                    renderItem={({ item, index }) => (
+                      <>
+                        <SvgUri
+                          width="200"
+                          height="200"
+                          source={{ uri: 'http://qatrt-nada.demo.asol-tec.com/uploads/images/7e85c1fa3827d73e88470865838679e7.svg' }} />
                         <ListItem>
                           <Row style={{ padding: 10 }}>
                             <Col style={{ width: 100 }}>
                               <View style={styles.image_container}>
-                                <Image
-                                  style={{
-                                    flex: 1,
-                                    width: undefined,
-                                    height: undefined,
-                                  }}
-                                  source={{ uri: img_url + item.image }}
-                                />
+                                {/* <Image
+                                style={{
+                                  flex: 1,
+                                  width: undefined,
+                                  height: undefined,
+                                }}
+                                source={{ uri: img_url + item.image }}
+                              /> */}
+
+
                               </View>
                             </Col>
                             <Col>
@@ -236,13 +245,13 @@ class Product extends Component {
                             </Col>
                           </Row>
                         </ListItem>
-                      )}
-                      keyExtractor={item => item.faq_name}
-                    />
-                    <Loader visible={isLoding} />
+                      </>
+                    )}
+                    keyExtractor={item => item.faq_name}
+                  />
+                  <Loader visible={isLoding} />
 
-                  </List>
-                </ScrollView>
+                </List>
               </Tab>
             ))}
           </Tabs>

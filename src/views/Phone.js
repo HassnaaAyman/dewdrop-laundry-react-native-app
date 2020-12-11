@@ -28,6 +28,7 @@ import {
   height_15,
   login_image,
   check_phone,
+  base_url,
 } from '../config/Constants';
 import { StatusBar, Loader } from '../components/GeneralComponents';
 import axios from 'axios';
@@ -63,7 +64,7 @@ class Phone extends Component {
       this.setState({ isLoding: true });
       await axios({
         method: 'post',
-        url: api_url + check_phone,
+        url: base_url + check_phone,
         data: { phone_number: this.state.phone },
       })
         .then(async response => {

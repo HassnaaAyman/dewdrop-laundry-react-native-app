@@ -188,7 +188,7 @@ class Home extends Component {
           </Right>
         </Header>
         <Content>
-          <Loader visible={isLoding} />
+          {/* <Loader visible={isLoding} /> */}
           <View>
             <Slideshow
               arrowSize={0}

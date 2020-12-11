@@ -95,7 +95,7 @@ class CompletedReservations extends Component {
     this.props.serviceActionPending();
     await axios({
       method: 'post',
-      url: api_url + my_orders,
+      url: base_url + my_orders,
       data: {
         customer_id: global.id,
         filter_type: this.props.filter_type,

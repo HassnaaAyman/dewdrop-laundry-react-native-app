@@ -79,6 +79,8 @@ target 'rith_laundry' do
 
   pod 'RNLocalize', :path => '../node_modules/react-native-localize'
 
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
   target 'rith_laundryTests' do
     inherit! :complete
     # Pods for testing

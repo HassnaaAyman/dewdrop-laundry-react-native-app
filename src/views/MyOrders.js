@@ -50,8 +50,8 @@ class MyOrders extends Component {
       data: { customer_id: global.id, filter_type: this.props.filter_type, lang: global.lang }
     })
       .then(async response => {
-        console.log(response, "response");
-        await this.props.serviceActionSuccess(response.data.result)
+        console.log(response.data.result, "orderresponse");
+        // await this.props.serviceActionSuccess(response.data.result)
       })
       .catch(error => {
         console.log(error, err);
@@ -69,7 +69,6 @@ class MyOrders extends Component {
   render() {
     Moment.locale('en');
     const { isLoding, error, data, message, status } = this.props
-    console.log(global.id, "data");
     return (
       <Container>
         <Header androidStatusBarColor={colors.theme_bg} style={styles.header} >
@@ -84,7 +83,7 @@ class MyOrders extends Component {
           </Right>
         </Header>
         <Content>
-          <Loader visible={isLoding} />
+          {/* <Loader visible={isLoding} /> */}
           <List>
             {data.map((row, index) => (
               <ListItem onPress={() => this.myorders_details(row)} >

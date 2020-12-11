@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, FlatList, Image, Alert } from 'react-native';
 import { Container, Header, Content, Left, Body, Right, Title, Button as Btn, Icon, Footer, ListItem } from 'native-base';
-import { api_url, place_order, payment_list, img_url, stripe_payment } from '../config/Constants';
+import { api_url, place_order, payment_list, img_url, stripe_payment, base_url } from '../config/Constants';
 import * as colors from '../assets/css/Colors';
 import { Loader } from '../components/GeneralComponents';
 import { Button } from 'react-native-elements';
@@ -78,7 +78,7 @@ class Payment extends Component {
     this.props.stripePending();
     await axios({
       method: 'post',
-      url: api_url + stripe_payment,
+      url: base_url + stripe_payment,
       data: { customer_id: global.id, amount: this.props.total, token: token }
     })
       .then(async response => {
@@ -96,7 +96,7 @@ class Payment extends Component {
     this.props.orderServicePending();
     await axios({
       method: 'post',
-      url: api_url + place_order,
+      url: base_url + place_order,
       data: { customer_id: global.id, payment_mode: this.state.payment_mode, address_id: this.props.address, expected_delivery_date: this.props.delivery_date, total: this.props.total, discount: this.props.discount, delivery_cost: this.state.delivery_cost, sub_total: this.props.sub_total, promo_id: this.props.promo_id, items: JSON.stringify(Object.values(this.props.items)) }
     })
       .then(async response => {
@@ -125,7 +125,7 @@ class Payment extends Component {
     this.props.paymentListPending();
     await axios({
       method: 'post',
-      url: api_url + payment_list,
+      url: base_url + payment_list,
       data: { lang: global.lang }
     })
       .then(async response => {
@@ -137,7 +137,6 @@ class Payment extends Component {
   }
 
   async move_orders() {
-    alert('hi');
     await this.props.reset();
     await this.props.productReset();
     this.props.navigation.navigate('MyOrders');

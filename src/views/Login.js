@@ -27,6 +27,7 @@ import {
   height_30,
   height_15,
   login_image,
+  base_url,
 } from '../config/Constants';
 import { StatusBar, Loader } from '../components/GeneralComponents';
 import axios from 'axios';
@@ -64,7 +65,7 @@ class Login extends Component {
       this.props.serviceActionPending();
       await axios({
         method: 'post',
-        url: api_url + login,
+        url: base_url + login,
         data: {
           phone_number: this.state.phone_number,
           password: this.state.password,

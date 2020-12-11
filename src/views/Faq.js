@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { StyleSheet, Text, FlatList } from 'react-native';
 import { Container, Header, Content, List, ListItem, Left, Body, Right, Title, Button, Icon } from 'native-base';
-import { api_url, faq } from '../config/Constants';
+import { api_url, base_url, faq } from '../config/Constants';
 import * as colors from '../assets/css/Colors';
 import { Loader } from '../components/GeneralComponents';
 import axios from 'axios';
-import { connect } from 'react-redux'; 
+import { connect } from 'react-redux';
 import { serviceActionPending, serviceActionError, serviceActionSuccess } from '../actions/FaqActions';
 import { CommonActions } from '@react-navigation/native';
 import strings from "../languages/strings.js";
@@ -13,32 +13,32 @@ import strings from "../languages/strings.js";
 class Faq extends Component<Props> {
 
   constructor(props) {
-      super(props)
-      this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
-      this.Faq();
+    super(props)
+    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
+    this.Faq();
   }
 
-  handleBackButtonClick= () => {
-      this.props.navigation.goBack(null);
+  handleBackButtonClick = () => {
+    this.props.navigation.goBack(null);
   }
 
   faq_details = (data) => {
-    this.props.navigation.navigate('FaqDetails',{ data : data }); 
+    this.props.navigation.navigate('FaqDetails', { data: data });
   }
 
   Faq = async () => {
     this.props.serviceActionPending();
     await axios({
-      method: 'post', 
-      url: api_url + faq,
-      data:{ lang: global.lang }
+      method: 'post',
+      url: base_url + faq,
+      data: { lang: global.lang }
     })
-    .then(async response => {
+      .then(async response => {
         await this.props.serviceActionSuccess(response.data)
-    })
-    .catch(error => {
+      })
+      .catch(error => {
         this.props.serviceActionError(error);
-    });
+      });
   }
 
 
@@ -63,7 +63,7 @@ class Faq extends Component<Props> {
           <List>
             <FlatList
               data={data}
-              renderItem={({ item,index }) => (
+              renderItem={({ item, index }) => (
                 <ListItem onPress={() => this.faq_details(item)} >
                   <Left>
                     <Text style={styles.faq_title} >{item.question}</Text>
@@ -83,45 +83,45 @@ class Faq extends Component<Props> {
   }
 }
 
-function mapStateToProps(state){
-  return{
-    isLoding : state.faq.isLoding,
-    error : state.faq.error,
-    data : state.faq.data,
-    message : state.faq.message,
-    status : state.faq.status,
+function mapStateToProps(state) {
+  return {
+    isLoding: state.faq.isLoding,
+    error: state.faq.error,
+    data: state.faq.data,
+    message: state.faq.message,
+    status: state.faq.status,
   };
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    serviceActionPending: () => dispatch(serviceActionPending()),
-    serviceActionError: (error) => dispatch(serviceActionError(error)),
-    serviceActionSuccess: (data) => dispatch(serviceActionSuccess(data))
+  serviceActionPending: () => dispatch(serviceActionPending()),
+  serviceActionError: (error) => dispatch(serviceActionError(error)),
+  serviceActionSuccess: (data) => dispatch(serviceActionSuccess(data))
 });
 
 
-export default connect(mapStateToProps,mapDispatchToProps)(Faq);
+export default connect(mapStateToProps, mapDispatchToProps)(Faq);
 
 const styles = StyleSheet.create({
-  header:{
-    backgroundColor:colors.theme_bg_three
+  header: {
+    backgroundColor: colors.theme_bg_three
   },
-  icon:{
-    color:colors.theme_fg_two
+  icon: {
+    color: colors.theme_fg_two
   },
   header_body: {
     flex: 3,
     justifyContent: 'center'
   },
-  title:{
-    alignSelf:'center', 
-    color:colors.theme_fg_two,
-    alignSelf:'center', 
-    fontSize:16, 
-    fontWeight:'bold'
+  title: {
+    alignSelf: 'center',
+    color: colors.theme_fg_two,
+    alignSelf: 'center',
+    fontSize: 16,
+    fontWeight: 'bold'
   },
-  faq_title:{
-    color:colors.theme_fg_two,
-    fontSize:15
+  faq_title: {
+    color: colors.theme_fg_two,
+    fontSize: 15
   }
 });

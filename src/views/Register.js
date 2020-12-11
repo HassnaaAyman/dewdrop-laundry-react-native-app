@@ -13,7 +13,7 @@ import { Icon as Icn, Button, Input } from 'react-native-elements';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { Icon, Card, CardItem, Item, Label } from 'native-base';
 import Snackbar from 'react-native-snackbar';
-import { api_url, register, height_40, login_image } from '../config/Constants';
+import { api_url, register, height_40, login_image, base_url } from '../config/Constants';
 import { StatusBar, Loader } from '../components/GeneralComponents';
 import * as colors from '../assets/css/Colors';
 import axios from 'axios';
@@ -75,7 +75,7 @@ class Register extends Component {
       this.props.serviceActionPending();
       await axios({
         method: 'post',
-        url: api_url + register,
+        url: base_url + register,
         data: {
           customer_name: this.state.customer_name,
           phone_number: this.state.phone_number,

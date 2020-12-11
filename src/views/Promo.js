@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Icon } from 'native-base';
-import { api_url, promo_code } from '../config/Constants';
+import { api_url, base_url, promo_code } from '../config/Constants';
 import * as colors from '../assets/css/Colors';
 import { Loader } from '../components/GeneralComponents';
 import axios from 'axios';
@@ -10,31 +10,31 @@ import { serviceActionPending, serviceActionError, serviceActionSuccess, addProm
 import { promo } from '../actions/CartActions';
 import strings from "../languages/strings.js";
 
-class Promo extends Component<Props> {
+class Promo extends Component {
 
   constructor(props) {
-      super(props)
-      this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
-      this.Promo();
+    super(props)
+    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
+    this.Promo();
   }
 
-  handleBackButtonClick= () => {
-      this.props.navigation.goBack(null);
+  handleBackButtonClick = () => {
+    this.props.navigation.goBack(null);
   }
 
   Promo = async () => {
     this.props.serviceActionPending();
     await axios({
-      method: 'post', 
-      url: api_url + promo_code,
-      data:{ lang: global.lang }
+      method: 'post',
+      url: base_url + promo_code,
+      data: { lang: global.lang }
     })
-    .then(async response => {
+      .then(async response => {
         await this.props.serviceActionSuccess(response.data)
-    })
-    .catch(error => {
+      })
+      .catch(error => {
         this.props.serviceActionError(error);
-    });
+      });
   }
 
   apply = async (data) => {
@@ -58,32 +58,32 @@ class Promo extends Component<Props> {
           <Right />
         </Header>
         <ScrollView>
-        <View style={styles.container} >
-          {data.map((row, index) => (
-            <View style={styles.promo_block} >
-              <View style={{ flexDirection:'row' }} >
-                <Left>
-                  <Text style={styles.promo_code} >{row.promo_code}</Text>
-                </Left>
-                <Right>
-                  <Text onPress={() => this.apply(row)} style={styles.apply} >{strings.apply}</Text>
-                </Right>
+          <View style={styles.container} >
+            {data.map((row, index) => (
+              <View style={styles.promo_block} >
+                <View style={{ flexDirection: 'row' }} >
+                  <Left>
+                    <Text style={styles.promo_code} >{row.promo_code}</Text>
+                  </Left>
+                  <Right>
+                    <Text onPress={() => this.apply(row)} style={styles.apply} >{strings.apply}</Text>
+                  </Right>
+                </View>
+                <View style={{ flexDirection: 'row' }} >
+                  <Left>
+                    <Text style={styles.promo_name} >{row.promo_name}</Text>
+                  </Left>
+                </View>
+                <View style={{ flexDirection: 'row' }} >
+                  <Left>
+                    <Text style={styles.description} >
+                      {row.description}
+                    </Text>
+                  </Left>
+                </View>
               </View>
-              <View style={{ flexDirection:'row' }} >
-                <Left>
-                  <Text style={styles.promo_name} >{row.promo_name}</Text>
-                </Left>
-              </View>
-              <View style={{ flexDirection:'row' }} >
-                <Left>
-                  <Text style={styles.description} >
-                    {row.description}
-                  </Text>
-                </Left>
-              </View>
-            </View>
-          ))}         
-        </View>
+            ))}
+          </View>
         </ScrollView>
         <Loader visible={isLoding} />
       </Container>
@@ -91,77 +91,77 @@ class Promo extends Component<Props> {
   }
 }
 
-function mapStateToProps(state){
-  return{
-    isLoding : state.promo.isLoding,
-    error : state.promo.error,
-    data : state.promo.data,
-    message : state.promo.message,
-    status : state.promo.status
+function mapStateToProps(state) {
+  return {
+    isLoding: state.promo.isLoding,
+    error: state.promo.error,
+    data: state.promo.data,
+    message: state.promo.message,
+    status: state.promo.status
   };
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    serviceActionPending: () => dispatch(serviceActionPending()),
-    serviceActionError: (error) => dispatch(serviceActionError(error)),
-    serviceActionSuccess: (data) => dispatch(serviceActionSuccess(data)),
-    addPromo: (data) => dispatch(addPromo(data)),
-    promo: (data) => dispatch(promo(data))
+  serviceActionPending: () => dispatch(serviceActionPending()),
+  serviceActionError: (error) => dispatch(serviceActionError(error)),
+  serviceActionSuccess: (data) => dispatch(serviceActionSuccess(data)),
+  addPromo: (data) => dispatch(addPromo(data)),
+  promo: (data) => dispatch(promo(data))
 });
 
 
-export default connect(mapStateToProps,mapDispatchToProps)(Promo);
+export default connect(mapStateToProps, mapDispatchToProps)(Promo);
 
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center'
   },
-  header:{
-    backgroundColor:colors.theme_bg_three
+  header: {
+    backgroundColor: colors.theme_bg_three
   },
-  icon:{
-    color:colors.theme_fg_two
+  icon: {
+    color: colors.theme_fg_two
   },
   header_body: {
     flex: 3,
     justifyContent: 'center'
   },
-  title:{
-    alignSelf:'center', 
-    color:colors.theme_fg_two,
-    alignSelf:'center', 
-    fontSize:16, 
-    fontWeight:'bold'
+  title: {
+    alignSelf: 'center',
+    color: colors.theme_fg_two,
+    alignSelf: 'center',
+    fontSize: 16,
+    fontWeight: 'bold'
   },
-  promo_block:{
-    width:'100%', 
-    padding:20, 
-    backgroundColor:colors.theme_bg_three, 
-    marginTop:10
+  promo_block: {
+    width: '100%',
+    padding: 20,
+    backgroundColor: colors.theme_bg_three,
+    marginTop: 10
   },
-  promo_code:{
-    borderWidth:1, 
-    borderColor:colors.promo_color, 
-    color:colors.promo_color, 
-    paddingTop:5, 
-    paddingRight:10, 
-    paddingBottom:5, 
-    paddingLeft:10
+  promo_code: {
+    borderWidth: 1,
+    borderColor: colors.promo_color,
+    color: colors.promo_color,
+    paddingTop: 5,
+    paddingRight: 10,
+    paddingBottom: 5,
+    paddingLeft: 10
   },
-  apply:{
-    fontSize:14, 
-    fontWeight:'bold', 
-    color:colors.theme_fg
+  apply: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: colors.theme_fg
   },
-  promo_name:{
-    fontSize:15, 
-    fontWeight:'bold', 
-    color:colors.theme_fg_two, 
-    marginTop:10
+  promo_name: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: colors.theme_fg_two,
+    marginTop: 10
   },
-  description:{
-    fontSize:12,
-    marginTop:5 
+  description: {
+    fontSize: 12,
+    marginTop: 5
   }
 });
 
