@@ -90,7 +90,7 @@
   "reservationDateText": "قم باختيار ميعاد الحجز",
   "reservationDay": "اختر يوم الحجز",
   "reservationTime": "اختر ميعاد الحجز",
-  "notes": "اضف ملاحظات",
+  "notes": " (اختياري)اضف ملاحظات",
   "reservation_home_success": "تم الحجز بنجاح",
   "your_reservations": "حجوزاتك",
   "active_reservations": "حجوزات جارية",

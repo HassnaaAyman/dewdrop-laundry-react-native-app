@@ -42,7 +42,7 @@ export default class ReservationDetails extends Component {
     this.props.navigation.goBack(null);
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const backEndTimeStamp = this.state.data.created_at;
 
     // get device timezone eg. -> "Asia/Shanghai"

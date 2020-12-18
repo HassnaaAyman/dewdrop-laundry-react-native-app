@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import strings from '../languages/strings';
-import { StyleSheet } from 'react-native';
+import { I18nManager, StyleSheet } from 'react-native';
 import * as colors from '../assets/css/Colors';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import {
@@ -16,7 +16,7 @@ import {
   Item,
   Textarea,
   Button,
-  Picker
+  Picker,
 } from 'native-base';
 import Icons from 'react-native-vector-icons/Fontisto';
 import Arrow from 'react-native-vector-icons/Foundation';
@@ -42,7 +42,6 @@ const HomeReservation = props => {
   const [daysId, setDaysId] = useState(null);
   const [notes, setNotes] = useState('');
   const [data, setData] = useState({});
-
 
   const handleBackButtonClick = () => {
     props.navigation.goBack(null);
@@ -87,7 +86,6 @@ const HomeReservation = props => {
     getReservationTimes();
   }, []);
 
-
   const getAdressAndLocation = data => {
     setData(data);
   };
@@ -129,20 +127,20 @@ const HomeReservation = props => {
       },
     })
       .then(response => {
-        console.log(response.data.message, "response");
+        console.log(response.data.message, 'response');
         if (response.data.error) {
           showSnackbar(strings.errMessages);
         } else {
           showSnackbar(response.data.message);
+          props.navigation.navigate('Home');
         }
-        setSelectedDate('');
-        setTimesValue('');
-        setData({})
-        setNotes('')
-        props.navigation.navigate('Home')
+        setSelectedDate(null);
+        setTimesValue(null);
+        setData({});
+        setNotes('');
       })
       .catch(error => {
-        console.log(error, "error");
+        console.log(error, 'error');
         showSnackbar(strings.sorry_something_went_wrong);
       });
   };
@@ -153,45 +151,63 @@ const HomeReservation = props => {
       if (times.times.includes(',')) {
         const timeArr = times.times.split(',');
         timeArr.map((time, i) => {
-          arr.push({ time: time, id: times.id })
+          arr.push({ time: time, id: times.id });
         });
       } else {
-        arr.push({ time: times.times, id: times.id })
+        arr.push({ time: times.times, id: times.id });
       }
-    })
+    });
     return arr;
-  }
+  };
 
+  // console.log(global.id, selectedDate, timesValue?.value, data.address, data.location, notes, "data");
+  console.log(data, 'data');
 
   return (
-    <Container
-      key={reservationDayAndTime.length}
-    >
+    <Container key={reservationDayAndTime.length}>
       <Header androidStatusBarColor={colors.theme_bg} style={styles.header}>
-        <Left style={{ flex: 1 }}>
-          <Arrow
-            onPress={handleBackButtonClick}
-            style={styles.icon}
-            name="arrow-right"
-            size={25}
-          />
-        </Left>
+        {lang === 'ar' ? (
+          <>
+            <Left style={{ flex: 1 }}>
+              <Arrow
+                onPress={handleBackButtonClick}
+                style={styles.icon}
+                name="arrow-right"
+                size={25}
+              />
+            </Left>
+            <Body style={styles.header_body}>
+              <Title style={styles.title}>{strings.HomeReservation}</Title>
+            </Body>
+          </>
+        ) : (
+            <>
+              <Body style={{ flex: 20, justifyContent: "center" }}>
+                <Title style={styles.title}>{strings.HomeReservation}</Title>
+              </Body>
+              <Right style={{ flex: 1 }}>
+                <Arrow
+                  onPress={handleBackButtonClick}
+                  // style={styles.icon}
+                  name="arrow-left"
+                  size={25}
+                />
+              </Right>
+            </>
+          )}
+        {/* 
         <Body style={styles.header_body}>
           <Title style={styles.title}>{strings.HomeReservation}</Title>
-        </Body>
+        </Body> */}
         <Right />
       </Header>
 
       <Row style={styles.container}>
         {lang === 'ar' ? (
-          <Item style={styles.input_date}
-            onPress={toggleReservationsDatePicker}
-          >
-            <Icons
-              name="date"
-              color="black"
-              size={20}
-            />
+          <Item
+            style={styles.input_date}
+            onPress={toggleReservationsDatePicker}>
+            <Icons name="date" color="black" size={20} />
             <Input
               placeholder={strings.reservationDateText}
               value={selectedDate}
@@ -199,14 +215,10 @@ const HomeReservation = props => {
             />
           </Item>
         ) : (
-            <Item style={styles.input_date}
-              onPress={toggleReservationsDatePicker}
-            >
-              <Icons
-                name="date"
-                color="black"
-                size={20}
-              />
+            <Item
+              style={styles.input_date}
+              onPress={toggleReservationsDatePicker}>
+              <Icons name="date" color="black" size={20} />
               <Input
                 placeholder={strings.reservationDateText}
                 value={selectedDate}
@@ -223,48 +235,50 @@ const HomeReservation = props => {
           mode="date"
         />
 
-
         <DropDownPicker
-          items={reservationDayAndTime.map((days) => { return { label: days.day, value: days.day, key: days.id } })}
+          items={reservationDayAndTime.map(days => {
+            return { label: days.day, value: days.day, key: days.id };
+          })}
           containerStyle={{ height: 40 }}
           style={{ backgroundColor: '#fafafa' }}
           itemStyle={{
-            justifyContent: 'flex-start'
+            justifyContent: 'flex-start',
           }}
           dropDownStyle={{ backgroundColor: '#fafafa' }}
           onChangeItem={(item, id) => {
             setIsSelected(true);
             setDaysValue(item);
-            setDaysId(id)
+            setDaysId(id);
           }}
           placeholder={strings.reservationDay}
         />
 
-        {isSelected &&
+        {isSelected && (
           <DropDownPicker
-            items={
-              handleReservationTime().map((time) => {
-                if (daysId + 1 === time.id) {
-                  return { label: time.time, value: time.time, key: time.id }
-                }
-                else {
-                  return { label: time.time, value: time.time, key: time.id, disabled: true }
-                }
-              })
-            }
+            items={handleReservationTime().map(time => {
+              if (daysId + 1 === time.id) {
+                return { label: time.time, value: time.time, key: time.id };
+              } else {
+                return {
+                  label: time.time,
+                  value: time.time,
+                  key: time.id,
+                  disabled: true,
+                };
+              }
+            })}
             containerStyle={{ height: 40 }}
             style={{ backgroundColor: '#fafafa' }}
             itemStyle={{
-              justifyContent: 'flex-start'
+              justifyContent: 'flex-start',
             }}
             dropDownStyle={{ backgroundColor: '#fafafa' }}
             onChangeItem={(item, id) => {
-              setTimesValue(item)
+              setTimesValue(item);
             }}
             placeholder={strings.reservationTime}
           />
-        }
-
+        )}
 
         {/* <Item>
           <Picker
@@ -306,7 +320,7 @@ const HomeReservation = props => {
           </Item>
         )} */}
 
-        <Item style={styles.address} onPress={addAddress} >
+        <Item style={styles.address} onPress={addAddress}>
           <Icons name="home" color="black" size={20} />
           <Input
             placeholder={strings.add_new_address}
@@ -351,7 +365,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    alignSelf: 'center',
     color: colors.theme_fg_two,
     alignSelf: 'center',
     fontSize: 16,
@@ -400,26 +413,26 @@ const styles = StyleSheet.create({
   },
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
   },
   modalView: {
     width: '90%',
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
     // alignItems: "center",
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5
-  }
+    elevation: 5,
+  },
 });
 
 export default HomeReservation;

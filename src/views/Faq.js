@@ -7,10 +7,10 @@ import { Loader } from '../components/GeneralComponents';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { serviceActionPending, serviceActionError, serviceActionSuccess } from '../actions/FaqActions';
-import { CommonActions } from '@react-navigation/native';
 import strings from "../languages/strings.js";
+import Arrow from 'react-native-vector-icons/Foundation';
 
-class Faq extends Component<Props> {
+class Faq extends Component {
 
   constructor(props) {
     super(props)
@@ -49,14 +49,36 @@ class Faq extends Component<Props> {
     return (
       <Container>
         <Header androidStatusBarColor={colors.theme_bg} style={styles.header} >
-          <Left style={{ flex: 1 }} >
-            <Button onPress={this.handleBackButtonClick} transparent>
-              <Icon style={styles.icon} name='arrow-back' />
-            </Button>
-          </Left>
-          <Body style={styles.header_body} >
-            <Title style={styles.title} >{strings.faq}</Title>
-          </Body>
+          {lang === 'ar' ? (
+            <>
+              <Left style={{ flex: 1 }}>
+                <Arrow
+                  onPress={this.handleBackButtonClick}
+                  style={styles.icon}
+                  name="arrow-right"
+                  size={25}
+                />
+              </Left>
+              <Body style={styles.header_body}>
+                <Title style={styles.title} >{strings.faq}</Title>
+              </Body>
+            </>
+          ) : (
+              <>
+                <Body style={{ flex: 20, justifyContent: "center" }}>
+                  <Title style={styles.title} >{strings.faq}</Title>
+                </Body>
+                <Right style={{ flex: 1 }}>
+                  <Arrow
+                    onPress={this.handleBackButtonClick}
+                    // style={styles.icon}
+                    name="arrow-left"
+                    size={25}
+                  />
+                </Right>
+              </>
+            )}
+
           <Right />
         </Header>
         <Content>

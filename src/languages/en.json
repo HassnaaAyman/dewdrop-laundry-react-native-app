@@ -90,7 +90,7 @@
   "reservationDateText": "select your reservation date",
   "reservationDay": "select your reservation day",
   "reservationTime": "select your reservation time",
-  "notes": "Add Notes",
+  "notes": "Add Notes (optional)",
   "your_reservations": "Your Reservations",
   "active_reservations": "Active Reservations",
   "completed_reservations": "Completed ",

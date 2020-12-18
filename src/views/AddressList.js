@@ -13,6 +13,7 @@ import * as colors from '../assets/css/Colors';
 import { CommonActions } from '@react-navigation/native';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import strings from "../languages/strings.js";
+import Arrow from 'react-native-vector-icons/Foundation';
 
 class AddressList extends Component {
 
@@ -81,17 +82,20 @@ class AddressList extends Component {
     this.props.navigation.goBack(null);
   }
 
+  getAdressAndLocation = data => {
+  };
+
   add_address = () => {
     RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({ interval: 10000, fastInterval: 5000 })
       .then(data => {
-        this.props.navigation.navigate('Address', { id: 0 });
+        this.props.navigation.navigate('Address', { id: 0, getAdressAndLocation: this.getAdressAndLocation });
       }).catch(err => {
         alert(strings.please_enable_your_location);
       });
   }
 
   edit_address = (id) => {
-    this.props.navigation.navigate('Address', { id: id });
+    this.props.navigation.navigate('Address', { id: id, getAdressAndLocation: this.getAdressAndLocation });
   }
 
   select_address = async (id) => {
@@ -144,12 +148,36 @@ class AddressList extends Component {
     return (
       <Container style={{ backgroundColor: colors.theme_bg_two }} >
         <Header androidStatusBarColor={colors.theme_bg} style={styles.header} >
-          <Left style={{ flex: 1 }} >
-            <Icon onPress={this.handleBackButtonClick} style={styles.icon} name='arrow-back' />
-          </Left>
-          <Body style={styles.header_body} >
-            <Title style={{ alignSelf: 'center', color: '#202028', fontSize: 16, fontWeight: 'bold' }} >{strings.manage_addresses}</Title>
-          </Body>
+
+          {lang === 'ar' ? (
+            <>
+              <Left style={{ flex: 1 }}>
+                <Arrow
+                  onPress={this.handleBackButtonClick}
+                  style={styles.icon}
+                  name="arrow-right"
+                  size={25}
+                />
+              </Left>
+              <Body style={styles.header_body}>
+                <Title style={{ alignSelf: 'center', color: '#202028', fontSize: 16, fontWeight: 'bold' }} >{strings.manage_addresses}</Title>
+              </Body>
+            </>
+          ) : (
+              <>
+                <Body style={{ flex: 20, justifyContent: "center" }}>
+                  <Title style={{ alignSelf: 'center', color: '#202028', fontSize: 16, fontWeight: 'bold' }} >{strings.manage_addresses}</Title>
+                </Body>
+                <Right style={{ flex: 1 }}>
+                  <Arrow
+                    onPress={this.handleBackButtonClick}
+                    // style={styles.icon}
+                    name="arrow-left"
+                    size={25}
+                  />
+                </Right>
+              </>
+            )}
           <Right />
         </Header>
         <ScrollView>

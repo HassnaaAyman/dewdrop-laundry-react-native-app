@@ -4,11 +4,11 @@ import {
   Text,
   View,
   ScrollView,
-  Image,
+  // Image,
   FlatList,
   TouchableOpacity,
   I18nManager,
-  Platform
+  Platform,
 } from 'react-native';
 import {
   Container,
@@ -49,6 +49,8 @@ import Arrow from 'react-native-vector-icons/Foundation';
 import SvgUri from 'react-native-svg-uri';
 
 import strings from '../languages/strings.js';
+import Svg from 'react-native-svg';
+import Image from 'react-native-remote-svg';
 
 class Product extends Component {
   constructor(props) {
@@ -140,8 +142,8 @@ class Product extends Component {
       cart_count,
       navigation,
     } = this.props;
-    data?.map((item) => console.log(item, "item"));
-    console.log(data, "data");
+    data?.map(item => console.log(item, 'item'));
+    console.log(data, 'data');
     return (
       <Container>
         <Header androidStatusBarColor={colors.theme_bg} style={styles.header}>
@@ -162,8 +164,7 @@ class Product extends Component {
           <Tabs
             tabBarUnderlineStyle={{ backgroundColor: colors.theme_bg_three }}
             initialPage={0}
-            prerenderingSiblingsNumber={10}
-          >
+            prerenderingSiblingsNumber={10}>
             {data.map((row, index) => (
               <Tab
                 heading={row.category_name}
@@ -172,38 +173,43 @@ class Product extends Component {
                 activeTextStyle={{
                   color: colors.theme_bg_three,
                   fontWeight: 'bold',
-                  fontSize: 10
+                  fontSize: 10,
                 }}
-                textStyle={{ fontSize: 10, fontWeight: "bold", color: colors.theme_bg_three }}
-              >
+                textStyle={{
+                  fontSize: 10,
+                  fontWeight: 'bold',
+                  color: colors.theme_bg_three,
+                }}>
                 <List>
                   <FlatList
-                    data={I18nManager.isRTL
-                      ? Platform.OS === 'android'
-                        ? data[data.length - 1 - index].product
+                    data={
+                      I18nManager.isRTL
+                        ? Platform.OS === 'android'
+                          ? data[data.length - 1 - index].product
+                          : row.product
                         : row.product
-                      : row.product
                     }
                     renderItem={({ item, index }) => (
                       <>
-                        <SvgUri
-                          width="200"
-                          height="200"
-                          source={{ uri: 'http://qatrt-nada.demo.asol-tec.com/uploads/images/7e85c1fa3827d73e88470865838679e7.svg' }} />
                         <ListItem>
                           <Row style={{ padding: 10 }}>
                             <Col style={{ width: 100 }}>
                               <View style={styles.image_container}>
                                 {/* <Image
-                                style={{
-                                  flex: 1,
-                                  width: undefined,
-                                  height: undefined,
-                                }}
-                                source={{ uri: img_url + item.image }}
-                              /> */}
+                                  style={{
+                                    flex: 1,
+                                    width: undefined,
+                                    height: undefined,
+                                  }}
+                                  source={{ uri: "data:image/svg+xml;utf8," + img_url + item.image }}
+                                /> */}
 
-
+                                <SvgUri
+                                  source={{
+                                    uri:
+                                      'http://qatrt-nada.demo.asol-tec.com/uploads/images/7e85c1fa3827d73e88470865838679e7.svg',
+                                  }}
+                                />
                               </View>
                             </Col>
                             <Col>
@@ -250,7 +256,6 @@ class Product extends Component {
                     keyExtractor={item => item.faq_name}
                   />
                   <Loader visible={isLoding} />
-
                 </List>
               </Tab>
             ))}

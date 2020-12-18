@@ -85,8 +85,8 @@ class Address extends Component {
       })
         .then(async response => {
           console.log(response, "response>>>>>>>");
-          // await this.props.serviceActionSuccess(response.data);
-          // await this.redirect(response.data, this.state);
+          await this.props.serviceActionSuccess(response.data);
+          await this.redirect(response.data, this.state);
         })
         .catch(error => {
           console.log(error, "error");
@@ -96,9 +96,9 @@ class Address extends Component {
     }
   };
 
-  handleBackButtonClick = () => {
-    this.props.navigation.goBack(null);
-  };
+  // handleBackButtonClick = () => {
+  //   this.props.navigation.goBack(null);
+  // };
 
   redirect = async (data, dataObj) => {
     if (data.status == 1) {
@@ -129,16 +129,15 @@ class Address extends Component {
     });
   }
 
-  // handleBackButtonClick = data => {
-  //   const { navigation, route } = this.props;
-  //   console.log(route, "route");
-  //   navigation.goBack();
-  //   route.params.getAdressAndLocation({
-  //     address: this.state.address,
-  //     location: this.state.longitude + ',' + this.state.latitude,
-  //   });
-  //   this.props.navigation.goBack('', data);
-  // };
+  handleBackButtonClick = data => {
+    const { navigation, route } = this.props;
+    // navigation.goBack();
+    route.params.getAdressAndLocation({
+      address: this.state.address,
+      location: this.state.longitude + ',' + this.state.latitude,
+    });
+    this.props.navigation.goBack('', data);
+  };
 
   async componentDidMount() {
     if (Platform.OS === 'ios') {
@@ -224,10 +223,12 @@ class Address extends Component {
         },
       })
         .then(async response => {
+          console.log(response, "response");
           await this.props.updateServiceActionSuccess(response.data);
           await this.redirect(response.data);
         })
         .catch(error => {
+          console.log(error, "error");
           this.showSnackbar(strings.sorry_something_went_wrong);
           this.props.updateServiceActionError(error);
         });
@@ -257,7 +258,7 @@ class Address extends Component {
   }
 
   onRegionChange = async value => {
-    this.setState({ address: 'Please wait...' });
+    // this.setState({ address: 'Please wait...' });
     fetch(
       'https://maps.googleapis.com/maps/api/geocode/json?address=' +
       value.latitude +
@@ -266,11 +267,10 @@ class Address extends Component {
       '&key=' +
       GOOGLE_KEY,
     )
-      .then(response => console.log(response, "response"))
+      .then(response => response.json())
       .then(responseJson => {
-        console.log(responseJson, ">>>>");
+        console.log(responseJson, "responseJson");
         if (responseJson.results[0].formatted_address !== undefined) {
-          console.log(responseJson, "responseJson");
           this.setState({
             address: responseJson.results[0].formatted_address,
             latitude: value.latitude,
@@ -285,7 +285,7 @@ class Address extends Component {
   render() {
     const { isLoding } = this.props;
     // console.log(this.state.address_id, "map");
-    console.log(global.id, this.state.address.toString(), this.state.door_no, this.state.latitude, this.state.longitude);
+    console.log(this.state.address_id, global.id, this.state.address.toString(), this.state.door_no, this.state.latitude, this.state.longitude);
 
     return (
       <Container

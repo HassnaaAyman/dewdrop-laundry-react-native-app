@@ -40,7 +40,7 @@ class Register extends Component {
       fcm_token: global.fcm_token,
     };
   }
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     BackHandler.addEventListener(
       'hardwareBackPress',
       this.handleBackButtonClick,

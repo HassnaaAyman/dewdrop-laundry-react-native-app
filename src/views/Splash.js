@@ -116,10 +116,11 @@ class Splash extends Component {
       url: base_url + settings
     })
       .then(async response => {
+        console.log(response, "response");
         await this.props.serviceActionSuccess(response.data)
       })
       .catch(error => {
-        //console.log(error);
+        console.log(error, "error");
         this.props.serviceActionError(error);
       });
   }

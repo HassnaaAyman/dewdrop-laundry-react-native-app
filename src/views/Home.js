@@ -70,7 +70,7 @@ class Home extends Component {
     this._unsubscribe();
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.setState({
       interval: setInterval(() => {
         this.setState({
@@ -100,7 +100,6 @@ class Home extends Component {
       data: { customer_id: global.id, lang: global.lang },
     })
       .then(async response => {
-        console.log(response.data, "response");
         this.setState({
           dataSource: response.data.banner_images,
           active_order: response.data.order.active,
@@ -131,10 +130,8 @@ class Home extends Component {
   }
 
   my_orders = async type => {
-    console.log('type', type);
     await this.props.filterType(type);
-    const jumpToAction = TabActions.jumpTo('MyOrders');
-    this.props.navigation.dispatch(jumpToAction);
+    this.props.navigation.navigate('MyOrders', { type });
   };
 
   render() {
